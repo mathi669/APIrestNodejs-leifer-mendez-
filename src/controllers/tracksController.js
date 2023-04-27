@@ -1,10 +1,12 @@
+const {tracksModel} = require('../models')
+
 /**
  * Obtener lista de la bdd!
  * @param {*} req 
  * @param {*} res 
  */
-const getItems = (req, res) => {
-    const data = ["hola", "mundo"]
+const getItems = async (req, res) => {
+    const data = await tracksModel.find({})
 
     res.send({data})
 }
@@ -21,7 +23,12 @@ const getItem = (req, res) => {}
  * @param {*} req 
  * @param {*} res 
  */
-const crearItem = (req, res) => {}
+const crearItem = async(req, res) => {
+    const { body } = req
+    console.log(body)
+    const data = await tracksModel.create(body)
+    res.send({data})
+}
 
 /**
  * Modificar Registro
