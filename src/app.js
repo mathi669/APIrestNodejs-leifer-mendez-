@@ -4,7 +4,6 @@ require('dotenv').config()
 const dbConnect = require('../src/shared/config/mongo')
 const app = express()
 
-
 app.use(cors())
 app.use(express.json())
 app.use(express.static("../src/shared/storage"))
