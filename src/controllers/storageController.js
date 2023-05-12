@@ -42,7 +42,7 @@ const getItem = async (req, res) => {
  */
 const crearItem = async (req, res) => {
   try {
-    const { body, file } = req;
+    const { file } = req;
     console.log(file);
     const fileDate = {
       filename: file.filename,
