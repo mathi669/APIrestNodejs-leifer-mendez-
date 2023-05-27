@@ -29,9 +29,31 @@ const createUser = async (req, res) => {
   }
 };
 
-const loginUser = async() => {
+const loginUser = async(req, res) => {
   try {
-    
+    req = matchedData(req)
+    const user = await usersModel.findOne({email:req.email})
+    if(!user){
+      handleHttpError(res, "USER_NOT_EXIST", 404);
+      return
+    }
+
+    const hashPassword = user.password;
+    const check = await compare(req.password, hashPassword)
+
+    if(!check){
+      handleHttpError(res, "Invalid_password", 401);
+      return
+    }
+
+    user.set('password', undefined, {strict: false})
+    const data = {
+      token: await tokenSign(user),
+      user
+    }
+
+    res.send({data})
+
   } catch (error) {
     handleHttpError(res, "ERROR_LOGIN_USER");
   }
