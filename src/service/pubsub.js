@@ -1,13 +1,18 @@
 const {PubSub} = require('@google-cloud/pubsub')
 const createUser = require('../controllers/usersController')
+require('dotenv').config()
 
 const pubsub = new PubSub()
 
+const project_id = process.env.PROJECT_ID
+const topic_name = process.env.TOPIC_NAME
+const subscription= process.env.SUBSCRIPTION
+
 async function subscribe(
     data = 'Hello user',
-    projectId = 'spatial-logic-394815',
-    topicNameOrId = 'projects/spatial-logic-394815/topics/topicTestings',
-    subscriptionName = 'projects/spatial-logic-394815/subscriptions/topicTestings-sub'
+    projectId = project_id,
+    topicNameOrId = topic_name,
+    subscriptionName = subscription
 
 ){
     const dataBuffer = Buffer.from(data);
