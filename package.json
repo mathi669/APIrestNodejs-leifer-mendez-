@@ -11,6 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@cloudnative/health-connect": "^2.1.0",
+    "@google-cloud/pubsub": "^4.0.0",
     "@slack/webhook": "^6.1.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
