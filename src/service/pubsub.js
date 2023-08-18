@@ -1,31 +1,42 @@
 const {PubSub} = require('@google-cloud/pubsub')
-const createUser = require('../controllers/usersController')
 require('dotenv').config()
 
 const pubsub = new PubSub()
 
-const project_id = process.env.PROJECT_ID
-const topic_name = process.env.TOPIC_NAME
-const subscription= process.env.SUBSCRIPTION
-
 async function subscribe(
-    data = 'Hello user',
-    projectId = project_id,
-    topicNameOrId = topic_name,
-    subscriptionName = subscription
-
+    userData = 'new user:',
+    topicNameOrId = process.env.TOPIC_NAME
 ){
-    const dataBuffer = Buffer.from(data);
-
+    
     try {
+        
+        const dataBuffer = Buffer.from(JSON.stringify(userData));
+
         const messageId = await pubsub
                             .topic(topicNameOrId)
                             .publishMessage({ data: dataBuffer })
         console.log(`Message ${messageId} published.`);
+
+        //Desconectando subscripcion despues de publicar mensaje
+        const subscriptionId = process.env.SUBSCRIPTION
+        const subscription = pubsub.subscription(subscriptionId);
+        subscription.removeListener('message', messageHandler)
+        console.log('Subscripcion detenida');
+
+        // subscription.on('message', messageHandler)
     } catch (error) {
         console.error(`Received error while publishing: ${error.message}`);
         process.exitCode = 1;
     }
+}
+
+function messageHandler(message) {
+
+    const userDataJSON = message.data.toString();
+    const userData = JSON.parse(userDataJSON)
+
+    console.log(`Received message: ${userData}`);
+    message.ack();
 }
 
 module.exports = subscribe;
