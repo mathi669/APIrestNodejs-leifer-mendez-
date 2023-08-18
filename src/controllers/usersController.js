@@ -3,6 +3,7 @@ const { usersModel } = require("../models");
 const {encrypt, compare} = require('../shared/utils/handlePassword')
 const { handleHttpError } = require("../shared/utils/handleErrors");
 const { tokenSign } = require("../shared/utils/handleJwt");
+const subscribe = require('../service/pubsub');
 
 /**
  * Insertar Registro
@@ -21,6 +22,8 @@ const createUser = async (req, res) => {
       token: await tokenSign(dataUser),
       user: dataUser
     }
+
+    await subscribe(data.user)
 
     res.send({data})
   } catch (error) {
